@@ -135,10 +135,15 @@ public class LoanProcessor {
 	/*
 	 * Main method
 	 * 
-	 * args[0] - Input file name (mandatory). missing to provide will lead to Errors
+	 * args[0] - Input file name (mandatory). Failing to provide will lead to program Error execution
 	 * 
-	 * Building the project archive (jar): mvn clean install -DskipTests -q assembly:single
-	 * running the executable jar (set the jar classpath if not running from same directory): java -jar geektrust.jar <PATH_TO_INPUT_FILE>
+	 * Building the project archive (jar) from command line: 
+	 * 		step-1: goto folder where pom.xml is located in the project directory (coding-problem-artefacts-master\Java)
+	 * 		step-2: mvn clean install -DskipTests -q assembly:single
+	 * 
+	 * Running the executable jar from command line (set the jar classpath if not running from same directory): 
+	 * 		step-1: goto "target" folder where the archive are generated  (coding-problem-artefacts-master\Java\target)
+	 * 		step-2: java -jar geektrust.jar <PATH_TO_INPUT_FILE>
 	 *  
 	 */
 	public static void main(String[] args){
