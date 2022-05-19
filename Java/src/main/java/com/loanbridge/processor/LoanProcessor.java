@@ -1,11 +1,7 @@
 package com.loanbridge.processor;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,16 +15,32 @@ import com.loanbridge.bean.BalanceDTO;
 import com.loanbridge.bean.LoanDTO;
 import com.loanbridge.bean.PaymentDTO;
 
-
+/*
+ * This program processes a file
+ * with LOAN, PAYMENT, BALANCE
+ * commands and generates output
+ * on the console.
+ * 
+ * @Author: Raghavendra K S
+ * Program created on: 17-05-2022
+ * Version: v1.0
+ * Developed for coding problem: https://codu.ai/coding-problem/the%20ledger%20co
+ * 
+ */
 public class LoanProcessor {
 	
 	static Map<String, List<Map<String, LoanDTO>>> masterLoanDataMap = new HashMap<>();
 	static List<Map<String, LoanDTO>> masterCustDtlsLst = new ArrayList<>();
 	static Map<String, LoanDTO> custMap;
-	static List<LoanDTO> loanDtlsLst;
-	static List<LoanDTO> tmpCustLst;
-	static int custCount = 0;
 
+	/*
+	 * Function to create the Master data from the LOAN information
+	 * 
+	 * Input: LoanDTO (Loan data POJO)
+	 * Output: MasterLoanDataMap (Map<String, List<Map<String, LoanDTO>>>)
+	 * 
+	 * MasterLoanDataMap sample data: [{UON={Shelly=com.loanbridge.bean.LoanDTO@76576ef342}},{IDIDI={Dale=com.loanbridge.bean.LoanDTO@5576ef302},{Richard=com.loanbridge.bean.LoanDTO@8756gd129}}.....]
+	 */
 	private static Consumer<LoanDTO> createLoanMasterMap = new Consumer<LoanDTO>() {
 		String tmpCustNameStr;
 		String tmpCustBankNameStr;
@@ -44,10 +56,16 @@ public class LoanProcessor {
     			masterCustDtlsLst.add(custMap);
     			masterLoanDataMap.put(tmpCustBankNameStr, masterCustDtlsLst);
     		}
-			custCount++;
 	    }
 	};
 	
+	/*
+	 * Function to set lumpsum amount data from the PAYMENT information
+	 * 
+	 * Input: PaymentDTO (Payment data POJO)
+	 * Output: set payment informtation to LoanDTO for that customer
+	 * 
+	 */
 	private static Consumer<PaymentDTO> processPayment = new Consumer<PaymentDTO>() {
 		String tmpCustNameStr;
 		String tmpCustBankNameStr;
@@ -70,6 +88,17 @@ public class LoanProcessor {
 		}
 	};
 	
+	/*
+	 * Function to process balance data from the BALANCE information
+	 * 
+	 * Input: BalanceDTO (Balance data POJO)
+	 * 
+	 * Output: Console output of total amount paid by the borrower, ]
+	 * including all the Lump Sum amounts paid including that EMI number, 
+	 * and the no of EMIs remaining
+	 * 
+	 */
+
 	private static Consumer<BalanceDTO> processBalance = new Consumer<BalanceDTO>() {
 		String tmpCustNameStr;
 		String tmpCustBankNameStr;
@@ -103,6 +132,15 @@ public class LoanProcessor {
 	    }
 	};
 	
+	/*
+	 * Main method
+	 * 
+	 * args[0] - Input file name (mandatory). missing to provide will lead to Errors
+	 * 
+	 * Building the project archive (jar): mvn clean install -DskipTests -q assembly:single
+	 * running the executable jar (set the jar classpath if not running from same directory): java -jar geektrust.jar <PATH_TO_INPUT_FILE>
+	 *  
+	 */
 	public static void main(String[] args){
 		String fileName=null;
 		if(args != null)
